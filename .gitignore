@@ -19,6 +19,8 @@ hob-image-*.bb
 !meta-poky
 !meta-yocto
 !meta-yocto-bsp
+!meta-openembedded
+!meta-raspberrypi
 !meta-yocto-imported
 /documentation/*/eclipse/
 /documentation/*/*.html
