@@ -1,0 +1,75 @@
+name: Yocto Raspberry Pi Build CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-yocto-image:
+    runs-on: ubuntu-22.04
+
+    env:
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+
+    steps:
+      - name: Checkout Poky Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            gawk wget git diffstat unzip texinfo gcc build-essential \
+            chrpath socat cpio python3 python3-pip python3-pexpect \
+            xz-utils debianutils iputils-ping python3-subunit \
+            python3-git python3-jinja2 zstd libacl1 zstd pzstd liblz4-tool \
+            file locales locale-gen ca-certificates lz4 rsync
+
+          sudo locale-gen en_US.UTF-8
+
+      - name: Build
+        run: |
+          source oe-init-build-env build
+
+          bitbake-layers add-layer ../meta-openembedded/meta-oe
+          bitbake-layers add-layer ../meta-raspberrypi
+
+          cat << 'EOF' >> conf/local.conf
+          MACHINE = "raspberrypi4-64"
+
+          ENABLE_UART="1"
+          ENABLE_AUDIO="1"
+          ENABLE_I2C="1"
+          ENABLE_SPI="1"
+
+          EXTRA_IMAGE_FEATURES+="ssh-server-dropbear"
+          IMAGE_INSTALL:append=" htop nano connman connman-client tzdata"
+          IMAGE_FSTYPE=" wic wic.bz2 tar.bz2"
+
+          INHERIT+="rm_work"
+          EOF
+
+          source oe-init-build-env build
+          bitbake core-image-base
+
+      - name: Upload Bootable Image Artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rasberrypi4-core-image-base
+          retention-days: 7
+          path: |
+            build/tmp/deploy/images/raspberrypi4-64/core-image-base-raspberrypi4-64.wic.bz2
+            build/tmp/deploy/images/qemux86-64/*.wic*
+            build/tmp/deploy/images/qemux86-64/*.ext4
+            build/tmp/deploy/images/qemux86-64/bzImage*
+            build/tmp/deploy/images/qemux86-64/*.qemuboot.conf
+            build/tmp/deploy/images/qemux86-64/*.manifest
