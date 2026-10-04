@@ -50,11 +50,12 @@ jobs:
           ENABLE_I2C="1"
           ENABLE_SPI="1"
 
-          EXTRA_IMAGE_FEATURES+="ssh-server-dropbear"
-          IMAGE_INSTALL:append=" htop nano connman connman-client tzdata"
-          IMAGE_FSTYPE=" wic wic.bz2 tar.bz2"
+          EXTRA_IMAGE_FEATURES += "ssh-server-dropbear"
+          IMAGE_INSTALL:append = " htop nano connman connman-client tzdata"
+          IMAGE_FSTYPE = " wic wic.bz2 tar.bz2"
 
           INHERIT+="rm_work"
+          LICENSE_FLAGS_ACCEPTED += "synaptics-killswitch"
           EOF
 
           bitbake core-image-base
