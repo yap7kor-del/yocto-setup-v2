@@ -67,9 +67,9 @@ jobs:
           name: rasberrypi4-core-image-base
           retention-days: 7
           path: |
-            build/tmp/deploy/images/raspberrypi4-64/core-image-base-raspberrypi4-64.wic.bz2
-            build/tmp/deploy/images/qemux86-64/*.wic*
-            build/tmp/deploy/images/qemux86-64/*.ext4
-            build/tmp/deploy/images/qemux86-64/bzImage*
-            build/tmp/deploy/images/qemux86-64/*.qemuboot.conf
-            build/tmp/deploy/images/qemux86-64/*.manifest
+            build/tmp/deploy/images/raspberrypi4-64/*
+            build/tmp/deploy/images/raspberrypi4-64/*.wic*
+            build/tmp/deploy/images/raspberrypi4-64/*.ext4
+            build/tmp/deploy/images/raspberrypi4-64/bzImage*
+            build/tmp/deploy/images/raspberrypi4-64/*.qemuboot.conf
+            build/tmp/deploy/images/raspberrypi4-64/*.manifest
