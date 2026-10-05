@@ -52,7 +52,7 @@ jobs:
 
           EXTRA_IMAGE_FEATURES += "ssh-server-dropbear"
           IMAGE_INSTALL:append = " htop nano connman connman-client tzdata"
-          IMAGE_FSTYPE = " wic wic.bz2 tar.bz2"
+          IMAGE_FSTYPES = "wic wic.bz2 tar.bz2 ext4"
 
           INHERIT+="rm_work"
           LICENSE_FLAGS_ACCEPTED += "synaptics-killswitch"
